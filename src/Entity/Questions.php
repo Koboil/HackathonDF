@@ -21,7 +21,7 @@ class Questions
     /**
      * @var Collection<int, Message>
      */
-    #[ORM\OneToMany(mappedBy: 'questionÂ_id', targetEntity: Message::class)]
+    #[ORM\OneToMany(mappedBy: 'question_id', targetEntity: Message::class)]
     private Collection $message_context;
 
     public function __construct()
@@ -58,7 +58,7 @@ class Questions
     {
         if (!$this->message_context->contains($messageContext)) {
             $this->message_context->add($messageContext);
-            $messageContext->setQuestionÂId($this);
+            $messageContext->setQuestionId($this);
         }
 
         return $this;
@@ -68,8 +68,8 @@ class Questions
     {
         if ($this->message_context->removeElement($messageContext)) {
             // set the owning side to null (unless already changed)
-            if ($messageContext->getQuestionÂId() === $this) {
-                $messageContext->setQuestionÂId(null);
+            if ($messageContext->getQuestionId() === $this) {
+                $messageContext->setQuestionId(null);
             }
         }
 

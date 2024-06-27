@@ -19,7 +19,7 @@ class Message
 
     #[ORM\ManyToOne(inversedBy: 'message_context')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Questions $questionÂ_id = null;
+    private ?Questions $question_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'messages')]
     #[ORM\JoinColumn(nullable: false)]
@@ -42,14 +42,14 @@ class Message
         return $this;
     }
 
-    public function getQuestionÂId(): ?Questions
+    public function getQuestionId(): ?Questions
     {
-        return $this->questionÂ_id;
+        return $this->question_id;
     }
 
-    public function setQuestionÂId(?Questions $questionÂ_id): static
+    public function setQuestionId(?Questions $question_id): static
     {
-        $this->questionÂ_id = $questionÂ_id;
+        $this->question_id = $question_id;
 
         return $this;
     }
