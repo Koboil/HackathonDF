@@ -2,11 +2,13 @@
 
 namespace App\Service;
 
+use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Component\String\UnicodeString;
 
 class OllamaService
 {
@@ -33,8 +35,7 @@ class OllamaService
             );
 
             $content = $response->toArray();
-
-            return $content['response'];
+            return json_decode(json_encode($content['response']));
 
         } catch (TransportExceptionInterface | ClientExceptionInterface | ServerExceptionInterface | RedirectionExceptionInterface $e) {
             return ['error' => $e->getMessage()];
