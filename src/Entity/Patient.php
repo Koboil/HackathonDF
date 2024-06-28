@@ -28,9 +28,6 @@ class Patient
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $birth_date = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $note = null;
-
     #[ORM\Column]
     private ?int $phone_number = null;
 
@@ -97,18 +94,6 @@ class Patient
     public function setBirthDate(\DateTimeInterface $birth_date): static
     {
         $this->birth_date = $birth_date;
-
-        return $this;
-    }
-
-    public function getNote(): ?string
-    {
-        return $this->note;
-    }
-
-    public function setNote(string $note): static
-    {
-        $this->note = $note;
 
         return $this;
     }

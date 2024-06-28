@@ -19,8 +19,7 @@ class AppFixtures extends Fixture
             $patient->setSurname($faker->lastName);
             $patient->setName($faker->firstName);
             $patient->setBirthDate($faker->dateTimeBetween('-100 years', '-18 years'));
-            $patient->setNote($faker->text);
-            $patient->setPhoneNumber($faker->phoneNumber);
+            $patient->setPhoneNumber(000000);
 
             $manager->persist($patient);
         }

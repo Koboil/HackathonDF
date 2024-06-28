@@ -14,9 +14,6 @@ class Message
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $response = null;
-
     #[ORM\ManyToOne(inversedBy: 'message_context')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Questions $question_id = null;
@@ -25,21 +22,12 @@ class Message
     #[ORM\JoinColumn(nullable: false)]
     private ?Patient $patient_id = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $response = null;
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getResponse(): ?string
-    {
-        return $this->response;
-    }
-
-    public function setResponse(string $response): static
-    {
-        $this->response = $response;
-
-        return $this;
     }
 
     public function getQuestionId(): ?Questions
@@ -62,6 +50,18 @@ class Message
     public function setPatientId(?Patient $patient_id): static
     {
         $this->patient_id = $patient_id;
+
+        return $this;
+    }
+
+    public function getResponse(): ?string
+    {
+        return $this->response;
+    }
+
+    public function setResponse(string $response): static
+    {
+        $this->response = $response;
 
         return $this;
     }
