@@ -2,7 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Message;
+use App\Entity\Patient;
+use App\Entity\Questions;
+use App\Repository\PatientRepository;
 use App\Service\OpenAIService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,15 +24,13 @@ class DefaultController extends AbstractController
     }
 
     #[Route('/', name: 'home')]
-    public function index(): Response
+    public function index(PatientRepository $patientRepository): Response
     {
-        return $this->render('mistral.html.twig');
-    }
+        $patients = $patientRepository->findAll();
 
-    #[Route('/chatbot', name: 'chatbot')]
-    public function chatbot(): Response
-    {
-        return $this->render('chatbot.html.twig');
+        return $this->render('mistral.html.twig', [
+            'patients' => $patients,
+        ]);
     }
 
     #[Route('/upload', name: 'upload')]
@@ -46,4 +49,5 @@ class DefaultController extends AbstractController
             'ollamaResponse' => $ollamaResponse,
         ]);
     }
+
 }

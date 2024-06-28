@@ -40,9 +40,13 @@ class Patient
     #[ORM\OneToMany(mappedBy: 'patient_id', targetEntity: Message::class)]
     private Collection $messages;
 
+    #[ORM\OneToMany(mappedBy: 'patient', targetEntity: Questions::class)]
+    private Collection $questions;
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
+        $this->questions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -151,6 +155,36 @@ class Patient
             // set the owning side to null (unless already changed)
             if ($message->getPatientId() === $this) {
                 $message->setPatientId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Questions>
+     */
+    public function getQuestions(): Collection
+    {
+        return $this->questions;
+    }
+
+    public function addQuestion(Questions $question): static
+    {
+        if (!$this->questions->contains($question)) {
+            $this->questions->add($question);
+            $question->setPatient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuestion(Questions $question): static
+    {
+        if ($this->questions->removeElement($question)) {
+            // set the owning side to null (unless already changed)
+            if ($question->getPatient() === $this) {
+                $question->setPatient(null);
             }
         }
 

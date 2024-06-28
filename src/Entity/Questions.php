@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\QuestionsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: QuestionsRepository::class)]
@@ -24,9 +25,17 @@ class Questions
     #[ORM\OneToMany(mappedBy: 'question_id', targetEntity: Message::class)]
     private Collection $message_context;
 
+    #[ORM\ManyToOne(inversedBy: 'questions')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Patient $patient = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $date = null;
+
     public function __construct()
     {
         $this->message_context = new ArrayCollection();
+        $this->setDate(new \DateTime());
     }
 
     public function getId(): ?int
@@ -72,6 +81,30 @@ class Questions
                 $messageContext->setQuestionId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPatient(): ?Patient
+    {
+        return $this->patient;
+    }
+
+    public function setPatient(?Patient $patient): static
+    {
+        $this->patient = $patient;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeInterface $date): static
+    {
+        $this->date = $date;
 
         return $this;
     }
