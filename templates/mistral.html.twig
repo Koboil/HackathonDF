@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Hackathon</title>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+</head>
+<body>
+    <form action="{{ url('upload') }}" method="post" enctype="multipart/form-data">
+        <textarea name="question" id="" cols="30" rows="10" placeholder="Message du médecin"></textarea>
+        <input type="file" name="file">
+        <input type="submit" value="Upload">
+    </form>
+</body>
+</html>
