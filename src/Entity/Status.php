@@ -17,6 +17,7 @@ class Status
     private ?string $bubble_status = null;
 
     #[ORM\Column(length: 255)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?string $type = null;
 
     #[ORM\OneToOne(inversedBy: 'status', cascade: ['persist', 'remove'])]

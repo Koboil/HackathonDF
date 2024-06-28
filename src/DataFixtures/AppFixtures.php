@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Message;
 use App\Entity\Patient;
 use App\Entity\Questions;
+use App\Entity\Status;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
@@ -28,6 +29,8 @@ class AppFixtures extends Fixture
             $patients[] = $patient;
         }
 
+        $statusCreated = false;
+
         foreach ($patients as $patient) {
             $question = new Questions();
             $question->setPatient($patient);
@@ -41,6 +44,23 @@ class AppFixtures extends Fixture
             $message->setResponse("Reponse " . $faker->sentence);
             $message->setDate($faker->dateTimeBetween('-1 years', 'now'));
             $manager->persist($message);
+
+            $status = new Status();
+            $status->setPatientId($patient);
+            $status->setBubbleStatus($faker->randomElement(['bleu', 'gris','jaune','orange']));
+            if($status->getBubbleStatus() == 'bleu' ){
+                    $status->setType('pas suporter');
+            }else if($status->getBubbleStatus() == 'gris'){
+                $status->setType('ok');
+            }else{
+                    $status->setType($faker->randomElement(['leger','modere','critique']));
+            }
+            $status->setSendSms($faker->randomElement([true, false]));
+            $status->setActive($faker->randomElement([true, false]));
+
+            $manager->persist($status);
+
+
         }
 
         $manager->flush();
