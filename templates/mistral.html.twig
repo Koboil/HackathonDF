@@ -2,13 +2,14 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Welcome to Symfony</title>
+    <title>Hackathon</title>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 <body>
-    <h1>Welcome to Symfony!</h1>
-    <p>This is your home page.</p>
-    <h2>Response from Mistral:</h2>
-    <pre>{{ response }}</pre>
+    <form action="{{ url('upload') }}" method="post" enctype="multipart/form-data">
+        <textarea name="question" id="" cols="30" rows="10" placeholder="Message du médecin"></textarea>
+        <input type="file" name="file">
+        <input type="submit" value="Upload">
+    </form>
 </body>
 </html>
