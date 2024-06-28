@@ -1,6 +1,14 @@
-version: "3.4"
+#version: "3.4"
 
 services:
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    environment:
+      - OLLAMA_MISTRAL_MODEL=mistral
+    volumes:
+      - ./ollama:/ollama
   php:
     build:
       context: .
