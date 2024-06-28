@@ -24,6 +24,12 @@ class DefaultController extends AbstractController
         return $this->render('mistral.html.twig');
     }
 
+    #[Route('/chatbot', name: 'chatbot')]
+    public function chatbot(): Response
+    {
+        return $this->render('chatbot.html.twig');
+    }
+
     #[Route('/upload', name: 'upload')]
     public function upload(Request $request): Response
     {
