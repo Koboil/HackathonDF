@@ -17,20 +17,20 @@ class AppFixtures extends Fixture
         $faker = Factory::create('fr_FR');
 
         $patients = [];
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             $patient = new Patient();
             $patient->setGender($faker->randomElement(['male', 'female']));
             $patient->setSurname($faker->lastName);
             $patient->setName($faker->firstName);
             $patient->setBirthDate($faker->dateTimeBetween('-100 years', '-18 years'));
-            $patient->setPhoneNumber(000000);
+            $patient->setPhoneNumber(0000000000);
 
             $manager->persist($patient);
             $patients[] = $patient;
         }
 
         $statusCreated = false;
-
+        $i= 0;
         foreach ($patients as $patient) {
             $question = new Questions();
             $question->setPatient($patient);
@@ -47,13 +47,19 @@ class AppFixtures extends Fixture
 
             $status = new Status();
             $status->setPatientId($patient);
-            $status->setBubbleStatus($faker->randomElement(['bleu', 'gris','jaune','orange']));
-            if($status->getBubbleStatus() == 'bleu' ){
-                    $status->setType('pas suporter');
-            }else if($status->getBubbleStatus() == 'gris'){
-                $status->setType('ok');
+
+            if ($i < 10){
+                $status->setBubbleStatus($faker->randomElement(['bleu', 'gris']));
+                $i++;
             }else{
-                    $status->setType($faker->randomElement(['leger','modere','critique']));
+                $status->setBubbleStatus($faker->randomElement(['jaune','orange']));
+
+            }
+
+            if($status->getBubbleStatus() == 'bleu' || $status->getBubbleStatus() == 'gris'){
+                    $status->setType('pas supporter');
+            }else{
+                    $status->setType($faker->randomElement(['ok','leger','modere','critique']));
             }
             $status->setSendSms($faker->randomElement([true, false]));
             $status->setActive($faker->randomElement([true, false]));
