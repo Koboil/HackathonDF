@@ -15,7 +15,18 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('fr_FR');
-
+        $listeQuestions = [
+            'bonjour, que se passe-t-il?',
+            'Un accompagnant est obligatoire pour votre sortie',
+            'CH de Gonesse : suite à votre opÃ©ration, si vous rencontrez des signes anormaux (douleurs, saignements,...) répondez SIG',
+            'Merci le service va vous contacter.',
+            'Pour toute question ou problème vous pouvez appeler la chirurgie ambulatoire au 01.00.00.00.00 du lundi au vendredi de 8h à 18h. En dehors de ces horaires, le weekend et jours fériés, contactez les numÃ©ros indiqués sur la pochette de sortie',
+            'Vous n\'avez pas répondu au dernier message. Si tout va bien, répondez TVB',
+            'Merci de remplir le questionnaire médical et d\'apporter la copie de vos dernières ordonnances',
+            'Suite à votre intervention à l\'Institut Mutualiste Montsouris si tout va bien (pas de douleur, pas de saignement, pas d\'hématome), répondez TVB',
+            'Pouvez-vous nous indiquer le type de difficulté que vous avez rencontrée ?',
+            'Au cours des 7 derniers jours, si vous avez eu un de ces signes, répondez seulement OUI, Sinon répondez seulement NON : - Fièvre, sensation de grippe ou courbatures, toux ou essoufflement inhabituel, mal de tete inhabituel ou perte de l\'odorat ou du gout'
+        ];
         $patients = [];
         for ($i = 0; $i < 100; $i++) {
             $patient = new Patient();
@@ -34,7 +45,7 @@ class AppFixtures extends Fixture
         foreach ($patients as $patient) {
             $question = new Questions();
             $question->setPatient($patient);
-            $question->setQuestion("Question " . $faker->sentence);
+            $question->setQuestion($faker->randomElement($listeQuestions));
             $question->setDate($faker->dateTimeBetween('-1 years', 'now'));
             $manager->persist($question);
 
