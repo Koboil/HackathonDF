@@ -42,7 +42,7 @@ class DefaultController extends AbstractController
         $fileContent = base64_encode(file_get_contents($file->getPathname()));
 
         $openAiResponse = $this->openAIService->describeImageFromBase64($fileContent, $medQuestion);
-        $ollamaResponse = $this->ollamaService->determineSeverity($openAiResponse);
+        $ollamaResponse = $this->ollamaService->determineSeverityPicture($openAiResponse);
 
         return $this->json([
             'openAiResponse' => $openAiResponse,

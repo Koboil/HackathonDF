@@ -43,12 +43,30 @@ class OllamaService
         }
     }
 
-    public function determineSeverity(string $openAiResponse): string
+    public function determineSeverityPicture(string $openAiResponse): string
     {
-        $prompt = "Détermine moi l'ordre de gravité de cette situation parmis 'critique', 'modérée', 'légère' ou 'Ok'. Je ne veux que tu réponde qu'avec un seul mot qui sera l'un des 4 proposé précédemment sachant qu'un état critique nécessite une intervention médicale importante dans les moindres délais, une situation modérée nécessitera une intervention médicale dans un délais plus ou moins court, une situation légère nécessitera un rendez vous au médecin généraliste par exemple et une situation ok ne nécessitera aucune intervention médicale : La photo montre une boule de pue à l'endroit de l'opération de l'apendice ! Le texte à analyser : {$openAiResponse}. Oublie pas que tu ne dois répondre que 'critique', 'modérée', 'légère' ou 'Ok' sans d'autre mot dans ta réponse !!";
+        $prompt = "Détermine moi l'ordre de gravité de cette situation parmis 'critique', 'modérée', 'légère' ou 'Ok'. Je ne veux que tu réponde qu'avec un seul mot qui sera 
+        l'un des 4 proposé précédemment sachant qu'un état critique nécessite une intervention médicale importante dans les moindres délais, une situation modérée nécessitera 
+        une intervention médicale dans un délais plus ou moins court, une situation légère nécessitera un rendez vous au médecin généraliste par exemple et une situation ok ne
+        nécessitera aucune intervention médicale : La photo montre une boule de pue à l'endroit de l'opération de l'apendice ! Le texte à analyser : {$openAiResponse}. Oublie pas
+        que tu ne dois répondre que 'critique', 'modérée', 'légère' ou 'Ok' sans d'autre mot dans ta réponse !!";
 
         $ollamaResponse = $this->getMistralResponse($prompt);
 
         return $ollamaResponse['response'] ?? '?';
+    }
+
+    public function determineSeverityText(string $question, string $response): string
+    {
+        $prompt = "Détermine moi l'ordre de gravité de la situation suivante parmis 'critique', 'modérée', 'légère' ou 'Ok'. Je ne 
+        veux que tu réponde qu'avec un seul mot qui sera l'un de ces 4 proposé  sachant qu'un état critique nécessite une
+        intervention médicale importante dans les moindres délais, une situation modérée nécessitera une intervention médicale dans
+        un délais plus ou moins court, une situation légère nécessitera un rendez vous au médecin généraliste par exemple et une 
+        situation ok ne nécessitera aucune intervention médicale. Le médecin a demandé : '{$question}'. Le patient lui a donc répondu : '{$response}'. Oublie pas que tu ne dois 
+        répondre que 'critique', 'modérée', 'légère' ou 'Ok' sans d'autre mot dans ta réponse selon la gravité 
+        que t'estime de la situation !!";
+        $ollamaResponse = $this->getMistralResponse($prompt);
+
+        return $ollamaResponse['response'] ?? '"Erreur de réponse"';
     }
 }
