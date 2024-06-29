@@ -11,7 +11,6 @@ const gridOptions = {
       { headerName:"Nom", field: "surname", sortable: true, filter: true, headerCheckboxSelection: true },
       { headerName:"Prénom", field: "name", sortable: true, filter: true, headerCheckboxSelection: true },
       { headerName:"Genre", field: "gender", sortable: true, filter: true, headerCheckboxSelection: true },
-      { headerName:"Date de naissance", field: "birth_date", sortable: true, filter: true, headerCheckboxSelection: true },
     ]
    };
 function funct(params) {
