@@ -70,7 +70,7 @@ class AppFixtures extends Fixture
             if($status->getBubbleStatus() == 'bleu' || $status->getBubbleStatus() == 'gris'){
                     $status->setType('pas supporter');
             }else{
-                    $status->setType($faker->randomElement(['ok','leger','modere','critique']));
+                    $status->setType($faker->randomElement(['Ok','Légère','Modéré','Critique']));
             }
             $status->setSendSms($faker->randomElement([true, false]));
             $status->setActive($faker->randomElement([true, false]));
