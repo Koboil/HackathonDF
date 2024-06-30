@@ -33,21 +33,21 @@ class DefaultController extends AbstractController
         ]);
     }
 
-    #[Route('/upload', name: 'upload')]
-    public function upload(Request $request): Response
-    {
-        $file = $request->files->get('file');
-        $medQuestion = $request->get('question');
+    // #[Route('/upload', name: 'upload')]
+    // public function upload(Request $request): Response
+    // {
+    //     $file = $request->files->get('file');
+    //     $medQuestion = $request->get('question');
 
-        $fileContent = base64_encode(file_get_contents($file->getPathname()));
+    //     $fileContent = base64_encode(file_get_contents($file->getPathname()));
 
-        $openAiResponse = $this->openAIService->describeImageFromBase64($fileContent, $medQuestion);
-        $ollamaResponse = $this->ollamaService->determineSeverityPicture($openAiResponse);
+    //     $openAiResponse = $this->openAIService->describeImageFromBase64($fileContent, $medQuestion);
+    //     $ollamaResponse = $this->ollamaService->determineSeverityPicture($openAiResponse);
 
-        return $this->json([
-            'openAiResponse' => $openAiResponse,
-            'ollamaResponse' => $ollamaResponse,
-        ]);
-    }
+    //     return $this->json([
+    //         'openAiResponse' => $openAiResponse,
+    //         'ollamaResponse' => $ollamaResponse,
+    //     ]);
+    // }
 
 }

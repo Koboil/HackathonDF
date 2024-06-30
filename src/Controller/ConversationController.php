@@ -81,10 +81,18 @@ class ConversationController extends AbstractController
                 if (in_array($mimeType, ['image/png', 'image/jpeg', 'image/jpg'])) {
                     $fileName = md5(uniqid()) . '.' . $file->guessExtension();
                     $file->move($this->getParameter('images_directory'), $fileName);
-                    $response->setResponse('Image: ' . $fileName);
-                    $type = $ollamaService->determineSeverityPicture($fileName);
+                    $filePath = $this->getParameter('images_directory') . '/' . $fileName;
+    
+                    // Encode file content to base64
+                    $fileContent = base64_encode(file_get_contents($filePath));
+    
+                    // Use OpenAI service to describe the image
+                    $openAiResponse = $this->openAIService->describeImageFromBase64($fileContent, $questionDoctor);
+
+                    // Insert Mistral response to Type
+                    $type = $ollamaService->determineSeverityPicture($openAiResponse);
                 } else {
-                    $response->setResponse('Invalid file type');
+                    $response->setResponse('Envoyer un JPEG ou PNG uniquement');
                 }
             } else {
                 // Handle plain text content

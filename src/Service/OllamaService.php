@@ -26,7 +26,7 @@ class OllamaService
         try {
             $response = $this->client->request(
                 'POST',
-                $url, // Assurez-vous que c'est la bonne URL
+                $url,
                 [
                     'json' => [
                         'model' => 'mistral',

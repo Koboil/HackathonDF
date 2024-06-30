@@ -43,3 +43,7 @@ ollama pull mistral
 # to exit ;
 exit
 ```
+
+## OpenAI for Image reading
+
+Input your OWN OPEN_AI_API_KEY inside .env.
