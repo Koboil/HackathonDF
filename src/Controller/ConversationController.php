@@ -91,6 +91,7 @@ class ConversationController extends AbstractController
 
                     // Insert Mistral response to Type
                     $type = $ollamaService->determineSeverityPicture($openAiResponse);
+                    $status->setType($type);
                 } else {
                     $response->setResponse('Envoyer un JPEG ou PNG uniquement');
                 }
@@ -98,7 +99,6 @@ class ConversationController extends AbstractController
                 // Handle plain text content
                 $type = $ollamaService->determineSeverityText($questionDoctor, $answer);
                 $status->setType($type);
-                dd($type);
             }
             
 
