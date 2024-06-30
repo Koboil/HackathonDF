@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Message;
 use App\Entity\Patient;
+use App\Entity\Status;
 use App\Entity\Questions;
 use App\Repository\PatientRepository;
 use App\Repository\QuestionsRepository;
+use App\Repository\StatusRepository;
 use App\Service\OpenAIService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\OllamaService;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ConversationController extends AbstractController
 {
@@ -22,6 +25,8 @@ class ConversationController extends AbstractController
         protected OllamaService $ollamaService,
         protected OpenAIService $openAIService,
     ) {
+        $this->ollamaService = $ollamaService;
+        $this->openAIService = $openAIService;
     }
 
     #[Route('/chatbot/{id}/admin', name: 'chatbot_admin')]
@@ -47,18 +52,57 @@ class ConversationController extends AbstractController
     }
 
     #[Route('/chatbot/{id}', name: 'chatbot_patient')]
-    public function chatbotPatient(Patient $patient, Request $request, EntityManagerInterface $entityManager, QuestionsRepository $questionsRepository): Response
-    {
+    public function chatbotPatient(Patient $patient, 
+    Request $request, 
+    EntityManagerInterface $entityManager, 
+    QuestionsRepository $questionsRepository, 
+    StatusRepository $statusRepository, OllamaService $ollamaService): Response {
         if ($request->isMethod('POST')) {
-            $content = $request->get('content');
+            $answer = $request->get('content');
+            $file = $request->files->get('file'); // Get the file from the request
 
             $question = $questionsRepository->findOneBy(['patient' => $patient], ['date' => 'DESC']);
+            $status = $statusRepository->findOneBy(['patient_id' => $patient]);
+            
+            if (!$status) {
+                $status = new Status();
+                $status->setPatientId($patient);
+            }
+            
 
             $response = new Message();
             $response->setPatientId($patient);
-            $response->setResponse($content);
+            $response->setResponse($answer);
+            $questionDoctor = $question->getQuestion();
             $response->setQuestionId($question);
+            if ($file instanceof UploadedFile) {
+                // Handle image file
+                $mimeType = $file->getMimeType();
+                if (in_array($mimeType, ['image/png', 'image/jpeg', 'image/jpg'])) {
+                    $fileName = md5(uniqid()) . '.' . $file->guessExtension();
+                    $file->move($this->getParameter('images_directory'), $fileName);
+                    $filePath = $this->getParameter('images_directory') . '/' . $fileName;
+    
+                    // Encode file content to base64
+                    $fileContent = base64_encode(file_get_contents($filePath));
+    
+                    // Use OpenAI service to describe the image
+                    $openAiResponse = $this->openAIService->describeImageFromBase64($fileContent, $questionDoctor);
 
+                    // Insert Mistral response to Type
+                    $type = $ollamaService->determineSeverityPicture($openAiResponse);
+                } else {
+                    $response->setResponse('Envoyer un JPEG ou PNG uniquement');
+                }
+            } else {
+                // Handle plain text content
+                $type = $ollamaService->determineSeverityText($questionDoctor, $answer);
+                $status->setType($type);
+                dd($type);
+            }
+            
+
+            $entityManager->persist($status);
             $entityManager->persist($response);
             $entityManager->flush();
         }
