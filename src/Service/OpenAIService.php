@@ -21,6 +21,7 @@ class OpenAIService
             ['type' => 'text', 'text' => $prompt],
             ['type'=> 'image_url', 'image_url' => ['url' => "data:image/jpeg;base64,{$base64Image}"]]
         ]);
+        
         return $openAiResponse['choices'][0]['message']['content'];;
     }
 
